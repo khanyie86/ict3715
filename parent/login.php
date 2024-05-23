@@ -1,61 +1,52 @@
+<?php
+session_start();
+require '../db/db_connect.php';  // Include the database connection
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    // Prepare and execute the statement
+    $stmt = $conn->prepare("SELECT * FROM admin WHERE email = :email");
+    $stmt->bindParam(':email', $email);
+    $stmt->execute();
+
+    // Fetch the user details
+    if ($stmt->rowCount() > 0) {
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Verify password
+        if (password_verify($password, $user['password'])) {
+            // Set session variables
+            $_SESSION['admin_id'] = $user['admin_id'];
+            $_SESSION['surname'] = $user['surname'];
+            $_SESSION['initials'] = $user['initials'];
+            $_SESSION['email'] = $user['email'];
+
+            // Redirect to a welcome page
+            header("Location: dashboard.php");
+            exit();
+        } else {
+            echo "Invalid email or password.";
+        }
+    } else {
+        echo "Invalid email or password.";
+    }
+}
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login Page</title>
 </head>
 <body>
 <h2>Login</h2>
-<?php
-session_start();
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Database connection
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "ict3715";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    // Retrieve form data
-    $parent_email = $_POST['parent_email'];
-    $password = $_POST['password'];
-
-    // SQL injection protection
-    $parent_email = mysqli_real_escape_string($conn, $parent_email);
-    $password = mysqli_real_escape_string($conn, $password);
-
-    // Query to check if user exists
-    $sql = "SELECT Parent_ID FROM parent WHERE Parent_email='$parent_email' AND Password='$password'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        // User exists, login successful
-        $row = $result->fetch_assoc();
-        $_SESSION['loggedin'] = true;
-        $_SESSION['parent_email'] = $parent_email;
-        $_SESSION['ParentID'] = $row['Parent_ID']; // Store ParentID in session
-        header("Location: dashboard.php"); // Redirect to dashboard page
-        exit;
-    } else {
-        // User doesn't exist or credentials are incorrect
-        echo "Invalid username or password.";
-    }
-
-    $conn->close();
-}
-?>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-    <label for="parent_email">Parent Email:</label><br>
-    <input type="text" id="parent_email" name="parent_email" value="john_doe" required><br>
+<form action="login.php" method="post">
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" value="khanyibu86@gmail.com" required><br><br>
     <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password" value="john123" required><br><br>
+    <input type="password" id="password" name="password" value="khanyie@86" required><br><br>
     <input type="submit" value="Login">
 </form>
 </body>
