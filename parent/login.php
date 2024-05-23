@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
 
     // Prepare and execute the statement
-    $stmt = $conn->prepare("SELECT * FROM admin WHERE email = :email");
+    $stmt = $conn->prepare("SELECT * FROM parent WHERE email = :email");
     $stmt->bindParam(':email', $email);
     $stmt->execute();
 
