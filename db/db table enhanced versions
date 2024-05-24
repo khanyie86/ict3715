@@ -1,18 +1,13 @@
-CREATE TABLE `bus_registration` (
-  `reg_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `bus_app` (
+  `app_id` int(11) NOT NULL AUTO_INCREMENT,
   `learner_id` int(11) NOT NULL,
-  `bus_number` varchar(255) NOT NULL,
-  `bus_limit` int(11) NOT NULL,
   `application_status` enum('approved', 'pending', 'rejected') NOT NULL,
-  `waiting_list_number` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `created_by` int(11) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `updated_by` int(11) DEFAULT NULL,
-  PRIMARY KEY (`reg_id`),
+  PRIMARY KEY (`app_id`),
   KEY `idx_learner_id` (`learner_id`),
-  KEY `idx_bus_number` (`bus_number`),
   KEY `idx_application_status` (`application_status`),
-  CONSTRAINT `fk_learner` FOREIGN KEY (`learner_id`) REFERENCES `learners`(`learner_id`),
-  CONSTRAINT `fk_bus` FOREIGN KEY (`bus_number`) REFERENCES `buses`(`bus_number`)
+  CONSTRAINT `fk_learner` FOREIGN KEY (`learner_id`) REFERENCES `learner`(`learner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
