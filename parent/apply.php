@@ -24,27 +24,95 @@ $parent_id = $_SESSION['parent_id'];
 <p>Email: <?php echo $email; ?></p>
 <p>parent_id: <?php echo $parent_id; ?></p>
 
-<label for="cars">Choose a route:</label>
 
-<select name="cars" id="cars">
-  <option value="volvo">Rooihuiskraal</option>
-  <option value="saab">Wierdapark</option>
-  <option value="mercedes">Centurion</option>
-  <option value="audi">Centurion 2</option>
-</select>
+<?php
 
+// Fetch routes and stops if action is set
+if (isset($_GET['action'])) {
+    $action = $_GET['action'];
 
-<label for="cars">Choose a stop:</label>
+    if ($action == 'getRoutes') {
+        $sql = "SELECT id, route_name FROM routes";
+        $result = $conn->query($sql);
+        $routes = array();
+        while ($row = $result->fetch_assoc()) {
+            $routes[] = $row;
+        }
+        echo json_encode($routes);
+        exit;
+    } elseif ($action == 'getStops' && isset($_GET['route_id'])) {
+        $route_id = intval($_GET['route_id']);
+        $sql = "SELECT id, stop_name FROM stops WHERE route_id = $route_id";
+        $result = $conn->query($sql);
+        $stops = array();
+        while ($row = $result->fetch_assoc()) {
+            $stops[] = $row;
+        }
+        echo json_encode($stops);
+        exit;
+    }
+}
 
-<select name="cars" id="cars">
-  <option value="volvo">Corner of Panorama and Marabou Road</option>
-  <option value="saab">Corner of Kolgansstraat and Skimmerstraat</option>
-  <option value="mercedes">Centurion</option>
-  <option value="audi">Centurion 2</option>
-</select>
+$conn->close();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Dropdown</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <form>
+        <label for="routes">Select Route:</label>
+        <select id="routes">
+            <option value="">Select a route</option>
+        </select>
 
-<button type='button'>Apply</button>
+        <label for="stops">Select Stop:</label>
+        <select id="stops">
+            <option value="">Select a stop</option>
+        </select>
+    </form>
 
+    <script>
+        $(document).ready(function() {
+            // Fetch routes
+            $.ajax({
+                url: 'apply.php',
+                type: 'GET',
+                data: { action: 'getRoutes' },
+                success: function(data) {
+                    var routes = JSON.parse(data);
+                    routes.forEach(function(route) {
+                        $('#routes').append('<option value="' + route.id + '">' + route.route_name + '</option>');
+                    });
+                }
+            });
+
+            // Fetch stops based on selected route
+            $('#routes').change(function() {
+                var route_id = $(this).val();
+                $('#stops').empty().append('<option value="">Select a stop</option>');
+                if (route_id) {
+                    $.ajax({
+                        url: 'apply.php',
+                        type: 'GET',
+                        data: { action: 'getStops', route_id: route_id },
+                        success: function(data) {
+                            var stops = JSON.parse(data);
+                            stops.forEach(function(stop) {
+                                $('#stops').append('<option value="' + stop.id + '">' + stop.stop_name + '</option>');
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
 
 <br>
 <p><a href="logout.php">Logout</a></p>
