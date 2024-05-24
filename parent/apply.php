@@ -24,23 +24,24 @@ $parent_id = $_SESSION['parent_id'];
 <p>Email: <?php echo $email; ?></p>
 <p>parent_id: <?php echo $parent_id; ?></p>
 
-<label for="cars">Choose a route:</label>
+<label for="route">Choose a route:</label>
 
-<select name="cars" id="cars">
-  <option value="volvo">Rooihuiskraal</option>
-  <option value="saab">Wierdapark</option>
-  <option value="mercedes">Centurion</option>
-  <option value="audi">Centurion 2</option>
+<select name="route" id="route">
+  <option value="rooihuiskraal">Rooihuiskraal</option>
+  <option value="wierdapark">Wierdapark</option>
+  <option value="centurion">Centurion</option>
 </select>
 
 
-<label for="cars">Choose a stop:</label>
+<label for="pick_up_point">Choose a  pick up point:</label>
 
-<select name="cars" id="cars">
-  <option value="volvo">Corner of Panorama and Marabou Road</option>
-  <option value="saab">Corner of Kolgansstraat and Skimmerstraat</option>
-  <option value="mercedes">Centurion</option>
-  <option value="audi">Centurion 2</option>
+<select name="pick_up" id="pick_up">
+  <option value="rooihuiskraal 1A">Corner of Panorama and Marabou Road</option>
+  <option value="rooihuiskraal 1B">Corner of Kolgansstraat and Skimmerstraat</option>
+  <option value="wierdapark 2A">Corner of Reddersburg Street and Mafeking Drive</option>
+  <option value="wierdapark 2B">Corner of Theuns van Niekerkstraat and Roosmarynstraat</option>
+  <option value="centurion 3A">Corner of Jasper Drive and Tieroog Street</option>
+  <option value="centurion 3B">Corner of Louise Street and Von Willich Drive</option>
 </select>
 
 <button type='button'>Apply</button>
