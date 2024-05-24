@@ -25,95 +25,13 @@ $parent_id = $_SESSION['parent_id'];
 <p>parent_id: <?php echo $parent_id; ?></p>
 
 
-<?php
-
-// Fetch routes and stops if action is set
-if (isset($_GET['action'])) {
-    $action = $_GET['action'];
-
-    if ($action == 'getRoutes') {
-        $sql = "SELECT id, route_name FROM routes";
-        $result = $conn->query($sql);
-        $routes = array();
-        while ($row = $result->fetch_assoc()) {
-            $routes[] = $row;
-        }
-        echo json_encode($routes);
-        exit;
-    } elseif ($action == 'getStops' && isset($_GET['route_id'])) {
-        $route_id = intval($_GET['route_id']);
-        $sql = "SELECT id, stop_name FROM stops WHERE route_id = $route_id";
-        $result = $conn->query($sql);
-        $stops = array();
-        while ($row = $result->fetch_assoc()) {
-            $stops[] = $row;
-        }
-        echo json_encode($stops);
-        exit;
-    }
-}
-
-$conn->close();
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Dropdown</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <form>
-        <label for="routes">Select Route:</label>
-        <select id="routes">
-            <option value="">Select a route</option>
-        </select>
-
-        <label for="stops">Select Stop:</label>
-        <select id="stops">
-            <option value="">Select a stop</option>
-        </select>
-    </form>
-
-    <script>
-        $(document).ready(function() {
-            // Fetch routes
-            $.ajax({
-                url: 'apply.php',
-                type: 'GET',
-                data: { action: 'getRoutes' },
-                success: function(data) {
-                    var routes = JSON.parse(data);
-                    routes.forEach(function(route) {
-                        $('#routes').append('<option value="' + route.id + '">' + route.route_name + '</option>');
-                    });
-                }
-            });
-
-            // Fetch stops based on selected route
-            $('#routes').change(function() {
-                var route_id = $(this).val();
-                $('#stops').empty().append('<option value="">Select a stop</option>');
-                if (route_id) {
-                    $.ajax({
-                        url: 'apply.php',
-                        type: 'GET',
-                        data: { action: 'getStops', route_id: route_id },
-                        success: function(data) {
-                            var stops = JSON.parse(data);
-                            stops.forEach(function(stop) {
-                                $('#stops').append('<option value="' + stop.id + '">' + stop.stop_name + '</option>');
-                            });
-                        }
-                    });
-                }
-            });
-        });
-    </script>
-</body>
-</html>
-
+<h2>Insert Application</h2>
+<form action="insert_application.php" method="post">
+    <label for="learner_id">Learner ID:</label>
+    <input type="number" id="learner_id" name="learner_id">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
 <br>
 <p><a href="logout.php">Logout</a></p>
 </body>
