@@ -1,0 +1,13 @@
+CREATE TABLE `bus_app` (
+  `app_id` int(11) NOT NULL AUTO_INCREMENT,
+  `learner_id` int(11) NOT NULL,
+  `application_status` enum('approved', 'pending', 'rejected') NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_by` int(11) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `updated_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`app_id`),
+  KEY `idx_learner_id` (`learner_id`),
+  KEY `idx_application_status` (`application_status`),
+  CONSTRAINT `fk_learner` FOREIGN KEY (`learner_id`) REFERENCES `learner`(`learner_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

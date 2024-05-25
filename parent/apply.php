@@ -47,6 +47,13 @@ $parent_id = $_SESSION['parent_id'];
 <button type='button'>Apply</button>
 
 
+<h2>Insert Application</h2>
+<form action="insert_application.php" method="post">
+    <label for="learner_id">Learner ID:</label>
+    <input type="number" id="learner_id" name="learner_id">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
 <br>
 <p><a href="logout.php">Logout</a></p>
 </body>
